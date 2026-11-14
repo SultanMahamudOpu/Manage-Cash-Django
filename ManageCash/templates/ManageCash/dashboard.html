@@ -1,0 +1,524 @@
+
+{% extends 'ManageCash/base.html' %}
+
+{% block content %}
+
+<!-- Dashboard Header -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+
+    <div>
+        <p class="text-sm font-semibold text-emerald-600 mb-2">
+            FINANCIAL OVERVIEW
+        </p>
+
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">
+            Dashboard
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+            Welcome back! Here's an overview of your finances.
+        </p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="flex flex-wrap items-center gap-3">
+
+        <a href="{% url 'add_cash' %}"
+           class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-700 hover:to-green-600 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition duration-200">
+
+            <svg class="w-5 h-5" fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 4v16m8-8H4"/>
+            </svg>
+
+            Add Cash
+        </a>
+
+        <a href="{% url 'add_expense' %}"
+           class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-rose-600 to-red-500 hover:from-rose-700 hover:to-red-600 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition duration-200">
+
+            <svg class="w-5 h-5" fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M20 12H4m8-8l-8 8 8 8"/>
+            </svg>
+
+            Add Expense
+        </a>
+
+        <a href="{% url 'transactions' %}"
+           class="inline-flex items-center gap-2 px-5 py-3 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-xl shadow-sm transition duration-200">
+
+            View All
+
+            <svg class="w-4 h-4" fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+
+    </div>
+</div>
+
+
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-10">
+
+    <!-- Total Income -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-emerald-500 to-green-700 rounded-2xl p-6 shadow-lg shadow-green-100 group">
+
+        <div class="absolute -right-8 -top-8 w-36 h-36 bg-white/10 rounded-full"></div>
+        <div class="absolute right-12 -bottom-12 w-28 h-28 bg-white/10 rounded-full"></div>
+
+        <div class="relative z-10">
+
+            <div class="flex items-center justify-between mb-5">
+
+                <div>
+                    <p class="text-green-100 text-sm font-medium">
+                        Total Income
+                    </p>
+                    <h3 class="text-white/80 text-xs mt-1">
+                        Your total earnings
+                    </h3>
+                </div>
+
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <svg class="w-7 h-7 text-white"
+                         fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 4v16m8-8H4m0 0l6-6m-6 6l6 6"/>
+                    </svg>
+                </div>
+
+            </div>
+
+            <p class="text-3xl font-extrabold text-white tracking-tight">
+                ৳ {{ total_cash|default:"0" }}
+            </p>
+
+            <div class="mt-5 flex items-center gap-2 text-green-100 text-xs">
+                <span class="w-2 h-2 bg-green-200 rounded-full"></span>
+                Total money received
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Total Expense -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-rose-500 to-red-700 rounded-2xl p-6 shadow-lg shadow-red-100 group">
+
+        <div class="absolute -right-8 -top-8 w-36 h-36 bg-white/10 rounded-full"></div>
+        <div class="absolute right-12 -bottom-12 w-28 h-28 bg-white/10 rounded-full"></div>
+
+        <div class="relative z-10">
+
+            <div class="flex items-center justify-between mb-5">
+
+                <div>
+                    <p class="text-red-100 text-sm font-medium">
+                        Total Expense
+                    </p>
+                    <h3 class="text-white/80 text-xs mt-1">
+                        Your total spending
+                    </h3>
+                </div>
+
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <svg class="w-7 h-7 text-white"
+                         fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 20V4m-8 8h16m0 0l-6-6m6 6l-6 6"/>
+                    </svg>
+                </div>
+
+            </div>
+
+            <p class="text-3xl font-extrabold text-white tracking-tight">
+                ৳ {{ total_expense|default:"0" }}
+            </p>
+
+            <div class="mt-5 flex items-center gap-2 text-red-100 text-xs">
+                <span class="w-2 h-2 bg-red-200 rounded-full"></span>
+                Total money spent
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Balance -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 shadow-lg shadow-blue-100 group sm:col-span-2 xl:col-span-1">
+
+        <div class="absolute -right-8 -top-8 w-36 h-36 bg-white/10 rounded-full"></div>
+        <div class="absolute right-12 -bottom-12 w-28 h-28 bg-white/10 rounded-full"></div>
+
+        <div class="relative z-10">
+
+            <div class="flex items-center justify-between mb-5">
+
+                <div>
+                    <p class="text-blue-100 text-sm font-medium">
+                        Available Balance
+                    </p>
+                    <h3 class="text-white/80 text-xs mt-1">
+                        Your remaining money
+                    </h3>
+                </div>
+
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <svg class="w-7 h-7 text-white"
+                         fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M3 7h18M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2m-2 4h2a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2h2m8 2h2"/>
+                    </svg>
+                </div>
+
+            </div>
+
+            <p class="text-3xl font-extrabold text-white tracking-tight">
+                ৳ {{ balance|default:"0" }}
+            </p>
+
+            <div class="mt-5 flex items-center gap-2 text-blue-100 text-xs">
+                <span class="w-2 h-2 bg-blue-200 rounded-full"></span>
+                Income minus expenses
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Recent Transactions Section -->
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-5 border-b border-gray-100">
+
+        <div>
+            <h3 class="text-xl font-bold text-gray-900">
+                Recent Transactions
+            </h3>
+
+            <p class="text-sm text-gray-500 mt-1">
+                Keep track of your latest financial activities.
+            </p>
+        </div>
+
+        <a href="{% url 'transactions' %}"
+           class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition">
+
+            View All Transactions
+
+            <svg class="w-4 h-4" fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"/>
+            </svg>
+
+        </a>
+
+    </div>
+
+
+    <!-- Transactions Table -->
+    <div class="overflow-x-auto">
+
+        <table class="w-full min-w-[750px]">
+
+            <thead class="bg-gray-50/80">
+
+                <tr>
+
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Type
+                    </th>
+
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Description
+                    </th>
+
+                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Amount
+                    </th>
+
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Date & Time
+                    </th>
+
+                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody class="divide-y divide-gray-100">
+
+                {% for e in entries %}
+
+                <tr class="hover:bg-gray-50/80 transition duration-150">
+
+                    <!-- Transaction Type -->
+                    <td class="px-6 py-5 whitespace-nowrap">
+
+                        {% if e.type == 'income' %}
+
+                            <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold">
+
+                                <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                                Income
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-700 rounded-full text-xs font-bold">
+
+                                <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+                                Expense
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Description -->
+                    <td class="px-6 py-5">
+
+                        <p class="text-sm font-semibold text-gray-800">
+
+                            {% if e.type == 'income' %}
+                                {{ e.source }} {{ e.description }}
+                            {% else %}
+                                {{ e.description }}
+                            {% endif %}
+
+                        </p>
+
+                    </td>
+
+
+                    <!-- Amount -->
+                    <td class="px-6 py-5 text-right whitespace-nowrap">
+
+                        {% if e.type == 'income' %}
+
+                            <span class="text-sm font-bold text-emerald-600">
+                                + ৳ {{ e.amount }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-sm font-bold text-rose-600">
+                                - ৳ {{ e.amount }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Date -->
+                    <td class="px-6 py-5 whitespace-nowrap">
+
+                        <p class="text-sm font-medium text-gray-700">
+                            {{ e.datetime|date:"d M, Y" }}
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-1">
+                            {{ e.datetime|date:"h:i A" }}
+                        </p>
+
+                    </td>
+
+
+                    <!-- Actions -->
+                    <td class="px-6 py-5 whitespace-nowrap text-center">
+
+                        <div class="flex items-center justify-center gap-3">
+
+                            {% if e.type == 'income' %}
+
+                                <a href="{% url 'edit_cash' e.id %}"
+                                   class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-semibold transition">
+
+                                    <svg class="w-4 h-4" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.5-7.5a2.12 2.12 0 013 3L12 16l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'delete_cash' e.id %}"
+                                   onclick="return confirm('Are you sure you want to delete this income entry?');"
+                                   class="inline-flex items-center gap-1 text-rose-600 hover:text-rose-800 text-sm font-semibold transition">
+
+                                    <svg class="w-4 h-4" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M3 6h18m-2 0l-1 14H6L5 6m3 0V4h8v2m-6 4v6m4-6v6"/>
+                                    </svg>
+
+                                    Delete
+                                </a>
+
+                            {% else %}
+
+                                <a href="{% url 'edit_expense' e.id %}"
+                                   class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-semibold transition">
+
+                                    <svg class="w-4 h-4" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.5-7.5a2.12 2.12 0 013 3L12 16l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'delete_expense' e.id %}"
+                                   onclick="return confirm('Are you sure you want to delete this expense entry?');"
+                                   class="inline-flex items-center gap-1 text-rose-600 hover:text-rose-800 text-sm font-semibold transition">
+
+                                    <svg class="w-4 h-4" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M3 6h18m-2 0l-1 14H6L5 6m3 0V4h8v2m-6 4v6m4-6v6"/>
+                                    </svg>
+
+                                    Delete
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <!-- Empty State -->
+                <tr>
+                    <td colspan="5" class="px-6 py-16 text-center">
+
+                        <div class="flex flex-col items-center">
+
+                            <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+
+                                <svg class="w-8 h-8 text-gray-400"
+                                     fill="none" viewBox="0 0 24 24"
+                                     stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01"/>
+                                </svg>
+
+                            </div>
+
+                            <h4 class="text-lg font-bold text-gray-800">
+                                No transactions yet
+                            </h4>
+
+                            <p class="text-sm text-gray-500 mt-2 mb-5">
+                                Start managing your finances by adding your first transaction.
+                            </p>
+
+                            <div class="flex flex-wrap justify-center gap-3">
+
+                                <a href="{% url 'add_cash' %}"
+                                   class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition">
+                                    Add Cash
+                                </a>
+
+                                <a href="{% url 'add_expense' %}"
+                                   class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-lg transition">
+                                    Add Expense
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- Table Footer -->
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+
+        <div class="flex items-center justify-between">
+
+            <p class="text-xs text-gray-500">
+                Showing recent financial activities
+            </p>
+
+            <a href="{% url 'transactions' %}"
+               class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition">
+                See all →
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bottom Information -->
+<div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 px-2">
+
+    <p class="text-sm text-gray-400">
+        Your finances, organized in one place.
+    </p>
+
+    <p class="text-xs text-gray-400">
+        ManageCash · Personal Finance Manager
+    </p>
+
+</div>
+
+{% endblock %}
